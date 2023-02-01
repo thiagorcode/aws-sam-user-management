@@ -15,19 +15,19 @@ Globals:
     TracingEnabled: true
 
 Resources:
-  HelloWorldFunction:
+  UsersFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: hello-world/
+      CodeUri: users/
       Handler: app.lambdaHandler
       Runtime: nodejs16.x
       Architectures:
       - x86_64
       Events:
-        HelloWorld:
+        Users:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /hello
+            Path: /users
             Method: get
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
