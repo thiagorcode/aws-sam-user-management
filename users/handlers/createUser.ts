@@ -10,24 +10,30 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
  *
  */
 
-export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  let response: APIGatewayProxyResult;
+interface Users {
+  name: string;
+  userName: string;
+  email: string;
+  password: string;
+}
+
+export const createUser = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   try {
-    response = {
-      statusCode: 201,
+    if (!event.body) throw new Error('Need body!');
+
+    const body = JSON.parse(event.body);
+    return {
       body: JSON.stringify({
-        message: 'hello users',
+        users: body,
       }),
+      statusCode: 200,
     };
   } catch (err: unknown) {
-    console.error(err);
-    response = {
-      statusCode: 500,
+    return {
       body: JSON.stringify({
         message: err instanceof Error ? err.message : 'some error happened',
       }),
+      statusCode: 500,
     };
   }
-
-  return response;
 };
