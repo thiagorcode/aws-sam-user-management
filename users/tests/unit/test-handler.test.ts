@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { lambdaHandler } from '../../app';
+import { createUser } from '../../handler';
 
 describe('Unit test for app handler', function () {
   it('verifies successful response', async () => {
@@ -52,7 +52,7 @@ describe('Unit test for app handler', function () {
       resource: '',
       stageVariables: {},
     };
-    const result: APIGatewayProxyResult = await lambdaHandler(event);
+    const result: APIGatewayProxyResult = await createUser(event);
 
     expect(result.statusCode).toEqual(200);
     expect(result.body).toEqual(

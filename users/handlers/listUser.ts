@@ -1,5 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { createResponse } from '../utils/response';
+import mysql from 'mysql';
 
 /**
  *
@@ -18,10 +19,36 @@ interface Users {
   password: string;
 }
 
-export const listUser = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const listUser = async (
+  event: APIGatewayProxyEvent,
+  context: any,
+  callback: any,
+): Promise<APIGatewayProxyResult> => {
   try {
+    console.log('context', context);
+    console.log('calback', callback);
+    const connection = mysql.createConnection({
+      host: 'localhost',
+      port: 0,
+      password: '---',
+      user: '---',
+      database: '---',
+    });
+
+    connection.connect();
+    const response = connection.query('SELECT * FROM gen.users', (err, res) => {
+      console.log(err);
+      if (err) throw err;
+      callback(null, createResponse({ statusCode: 200, data: res }));
+    });
+    console.log('test', response);
     return createResponse({ statusCode: 200 });
   } catch (err: unknown) {
-    return createResponse({ statusCode: 500 });
+    return createResponse({
+      statusCode: 500,
+      data: {
+        message: err instanceof Error ? err.message : 'some error happened',
+      },
+    });
   }
 };

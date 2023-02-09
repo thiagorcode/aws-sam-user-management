@@ -1,4 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { createResponse } from '../utils/response';
 
 /**
  *
@@ -22,18 +23,18 @@ export const createUser = async (event: APIGatewayProxyEvent): Promise<APIGatewa
     if (!event.body) throw new Error('Need body!');
 
     const body = JSON.parse(event.body);
-    return {
-      body: JSON.stringify({
+    return createResponse({
+      data: {
         users: body,
-      }),
+      },
       statusCode: 200,
-    };
+    });
   } catch (err: unknown) {
-    return {
-      body: JSON.stringify({
+    return createResponse({
+      data: {
         message: err instanceof Error ? err.message : 'some error happened',
-      }),
+      },
       statusCode: 500,
-    };
+    });
   }
 };
